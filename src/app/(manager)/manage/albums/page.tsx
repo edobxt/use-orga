@@ -1,4 +1,4 @@
-import { PlusCircle } from "lucide-react";
+import { AddAlbumButton } from "@/components/add-album-button";
 import Link from "next/link";
 
 const ManageAlbums = () => {
@@ -6,10 +6,7 @@ const ManageAlbums = () => {
 		<div className="flex flex-col gap-10 max-w-7xl mx-auto w-full px-4">
 			<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
 				<h1 className="text-2xl font-bold">Gérer les albums</h1>
-				<button className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-md hover:bg-gray-100 transition-colors">
-					<PlusCircle className="w-5 h-5" />
-					<span>Ajouter un album</span>
-				</button>
+				<AddAlbumButton />
 			</div>
 
 			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">

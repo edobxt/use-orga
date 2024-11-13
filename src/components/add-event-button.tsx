@@ -2,6 +2,7 @@
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
+import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -24,9 +25,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { Calendar } from "@/components/ui/calendar";
+import { PlusCircle } from "lucide-react";
 
-const ManageEventItem = () => {
+export function AddEventButton() {
 	const [open, setOpen] = React.useState(false);
 	const isDesktop = useMediaQuery("(min-width: 768px)");
 
@@ -37,21 +38,19 @@ const ManageEventItem = () => {
 				onOpenChange={setOpen}
 			>
 				<DialogTrigger asChild>
-					<div className="cursor-pointer group relative aspect-square rounded-lg overflow-hidden hover:ring-2 hover:ring-white/50 transition-all">
-						<div className="absolute inset-0 bg-[url('/soon-gs-event.png')] bg-cover bg-center" />
-					</div>
+					<button className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-md hover:bg-gray-100 transition-colors">
+						<PlusCircle className="w-5 h-5" />
+						<span>Ajouter un événement</span>
+					</button>
 				</DialogTrigger>
 				<DialogContent className="sm:max-w-[425px] text-black">
 					<DialogHeader>
-						<DialogTitle>Modifier un événement</DialogTitle>
+						<DialogTitle>Ajouter un événement</DialogTitle>
 						<DialogDescription>
-							Modifiez un événement avec son nom, son flyer et le lien billetterie.
+							Ajoutez un événement avec son nom, son flyer et le lien billetterie.
 						</DialogDescription>
 					</DialogHeader>
-					<div className="overflow-scroll max-h-[70vh]">
 					<ProfileForm />
-
-					</div>
 				</DialogContent>
 			</Dialog>
 		);
@@ -63,20 +62,19 @@ const ManageEventItem = () => {
 			onOpenChange={setOpen}
 		>
 			<DrawerTrigger asChild>
-				<div className="cursor-pointer group relative aspect-square rounded-lg overflow-hidden hover:ring-2 hover:ring-white/50 transition-all">
-					<div className="absolute inset-0 bg-[url('/soon-gs-event.png')] bg-cover bg-center" />
-				</div>
+				<button className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-md hover:bg-gray-100 transition-colors">
+					<PlusCircle className="w-5 h-5" />
+					<span>Ajouter un événement</span>
+				</button>
 			</DrawerTrigger>
 			<DrawerContent>
 				<DrawerHeader className="text-left text-black">
-					<DrawerTitle>Modifier un événement</DrawerTitle>
+					<DrawerTitle>Ajouter un événement</DrawerTitle>
 					<DrawerDescription>
-						Modifiez un événement avec son nom, son flyer et le lien billetterie.
+						Ajoutez un événement avec son nom, son flyer et le lien billetterie.
 					</DrawerDescription>
 				</DrawerHeader>
-				<div className="overflow-scroll max-h-[70vh]">
-					<ProfileForm className="px-4" />
-				</div>
+				<ProfileForm className="px-4" />
 				<DrawerFooter className="pt-2">
 					<DrawerClose asChild>
 						<Button variant="outline" className="text-black">Fermer</Button>
@@ -85,16 +83,13 @@ const ManageEventItem = () => {
 			</DrawerContent>
 		</Drawer>
 	);
-};
+}
 
 function ProfileForm({ className }: React.ComponentProps<"form">) {
 	const [date, setDate] = React.useState<Date | undefined>(new Date());
 
 	return (
 		<form className={cn("grid items-start gap-4 text-black", className)}>
-			<div className="cursor-pointer group relative aspect-square rounded-lg overflow-hidden hover:ring-2 hover:ring-white/50 transition-all">
-				<div className="absolute inset-0 bg-[url('/soon-gs-event.png')] bg-cover bg-center" />
-			</div>
 			<div className="grid w-full max-w-sm items-center gap-1.5">
 				<Label htmlFor="picture">Flyer :</Label>
 				<Input
@@ -128,10 +123,8 @@ function ProfileForm({ className }: React.ComponentProps<"form">) {
 				type="submit"
 				className="font-bold"
 			>
-				Modifier l&apos;événement
+				Ajouter l&apos;événement
 			</Button>
 		</form>
 	);
 }
-
-export default ManageEventItem;
