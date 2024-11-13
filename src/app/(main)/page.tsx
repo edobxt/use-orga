@@ -8,7 +8,7 @@ export default function Home() {
 			<div className="w-full flex flex-col gap-10">
 				<div className="grid grid-cols-1 gap-4">
 					<h2 className="text-xl font-bold">Événements à venir en France</h2>
-					<div className="grid grid-cols-2 gap-4">
+					<div className="grid grid-cols-2 gap-2">
 						<Flyer src="/La-Noche-de-Navidad.png" />
 						<Flyer src="/soon-gs-event.png" />
 					</div>
