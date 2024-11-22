@@ -10,7 +10,7 @@ const ManageRecommendedEvent = ({ event }: { event: Event }) => {
 			formData.append("recommended", "false");
 
 			const response = await fetch(`/api/event/${event.id}/recommended`, {
-				method: "POST",
+				method: "PUT",
 				body: formData,
 			});
 			if (response.ok) {

@@ -1,7 +1,7 @@
 import { setRecommendedEvent } from "@/actions/event-actions";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(request: NextRequest, { params }: { params: { id: number } }) {
+export async function PUT(request: NextRequest, { params }: { params: { id: number } }) {
 	const { id } = params;
 	const formData = await request.formData();
 

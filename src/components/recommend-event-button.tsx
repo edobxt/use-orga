@@ -37,7 +37,7 @@ export function RecommendEventButton() {
                 formData.append("recommended", "true");
 
                 fetch(`/api/event/${event.id}/recommended`, {
-                    method: "POST",
+                    method: "PUT",
                     body: formData,
                 });
             });
