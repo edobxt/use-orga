@@ -46,6 +46,9 @@ export function AddBannerButton() {
 					<DialogHeader>
 						<DialogTitle>Ajouter une bannière</DialogTitle>
 					</DialogHeader>
+					<DialogDescription>
+						Ajoutez une bannière pour promouvoir vos événements.
+					</DialogDescription>
 					<ProfileForm />
 				</DialogContent>
 			</Dialog>
@@ -67,6 +70,9 @@ export function AddBannerButton() {
 				<DrawerHeader className="text-left text-black">
 					<DrawerTitle>Ajouter une bannière</DrawerTitle>
 				</DrawerHeader>
+				<DrawerDescription>
+				Ajoutez une bannière pour promouvoir vos événements.
+				</DrawerDescription>
 				<ProfileForm className="px-4" />
 				<DrawerFooter className="pt-2">
 					<DrawerClose asChild>

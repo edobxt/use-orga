@@ -25,7 +25,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { PlusCircle } from "lucide-react";
+import { Loader, PlusCircle } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import { useEffect } from "react";
+import { getRegions } from "@/actions/region-actions";
+import { Region } from "@/lib/types";
 
 export function AddEventButton() {
 	const [open, setOpen] = React.useState(false);
@@ -77,7 +81,12 @@ export function AddEventButton() {
 				<ProfileForm className="px-4" />
 				<DrawerFooter className="pt-2">
 					<DrawerClose asChild>
-						<Button variant="outline" className="text-black">Fermer</Button>
+						<Button
+							variant="outline"
+							className="text-black"
+						>
+							Fermer
+						</Button>
 					</DrawerClose>
 				</DrawerFooter>
 			</DrawerContent>
@@ -86,45 +95,123 @@ export function AddEventButton() {
 }
 
 function ProfileForm({ className }: React.ComponentProps<"form">) {
-	const [date, setDate] = React.useState<Date | undefined>(new Date());
+	const [date, setDate] = React.useState<Date | undefined>();
+	const [file, setFile] = React.useState<File | null>(null);
+	const [name, setName] = React.useState<string>("");
+	const [link, setLink] = React.useState<string>("");
+	const [regions, setRegions] = React.useState<Region[]>([]);
+	const [region, setRegion] = React.useState<string>("");
+	const [loading, setLoading] = React.useState<boolean>(false);
+
+	useEffect(() => {
+		getRegions().then(setRegions);
+	}, []);
+
+	const handleSubmit = async (e: React.FormEvent) => {
+		e.preventDefault();
+		setLoading(true);
+
+		const formData = new FormData();
+		formData.append("flyer", file as Blob);
+		formData.append("date", date?.toISOString().split("T")[0] || "");
+		formData.append("name", name);
+		formData.append("region", region);
+		formData.append("booking_link", link);
+
+		try {
+			const response = await fetch("/api/event", {
+				method: "POST",
+				body: formData,
+			});
+
+			const result = await response.json();
+			if (response.ok) {
+				window.location.reload();
+			} else {
+				console.error("Erreur :", result.message);
+			}
+		} catch (error) {
+			console.error("Erreur lors de l'upload ou de la création de l'événement:", error);
+		} finally {
+			setLoading(false);
+		}
+	};
 
 	return (
-		<form className={cn("grid items-start gap-4 text-black", className)}>
-			<div className="grid w-full max-w-sm items-center gap-1.5">
-				<Label htmlFor="picture">Flyer :</Label>
-				<Input
-					id="picture"
-					type="file"
-				/>
-			</div>
-			<div className="grid w-full max-w-sm items-center gap-1.5">
-				<Label htmlFor="name">Nom de l&apos;événement :</Label>
-				<Input
-					id="name"
-					type="text"
-					placeholder="Entrez le nom de l'événement"
-				/>
-			</div>
-			<div className="grid w-full max-w-sm items-center gap-1.5">
-				<Label htmlFor="link">Lien billetterie :</Label>
-				<Input
-					id="link"
-					type="text"
-					placeholder="Entrez le lien billetterie"
-				/>
-			</div>
-			<Calendar
-				mode="single"
-				selected={date}
-				onSelect={setDate}
-				className="rounded-md border mx-auto"
-			/>
-			<Button
-				type="submit"
-				className="font-bold"
+		<div className="relative">
+			{loading && (
+				<div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50">
+					<Loader className="w-10 h-10 animate-spin" />
+				</div>
+			)}
+			<form
+				onSubmit={handleSubmit}
+				className={cn("grid items-start gap-4 text-black", className)}
+				encType="multipart/form-data"
 			>
-				Ajouter l&apos;événement
-			</Button>
-		</form>
+				<div className="grid w-full max-w-sm items-center gap-1.5">
+					<Label htmlFor="picture">Flyer :</Label>
+					<Input
+						id="picture"
+						type="file"
+						onChange={(e) => setFile(e.target.files?.[0] || null)}
+					/>
+				</div>
+				<div className="grid w-full max-w-sm items-center gap-1.5">
+					<Label htmlFor="name">Nom de l&apos;événement :</Label>
+					<Input
+						id="name"
+						type="text"
+						placeholder="Entrez le nom de l'événement"
+						value={name}
+						onChange={(e) => setName(e.target.value)}
+					/>
+				</div>
+				<div className="grid w-full max-w-sm items-center gap-1.5">
+					<Label htmlFor="link">Lien billetterie :</Label>
+					<Input
+						id="link"
+						type="text"
+						placeholder="Entrez le lien billetterie"
+						value={link}
+						onChange={(e) => setLink(e.target.value)}
+					/>
+				</div>
+				<div className="grid w-full max-w-sm items-center gap-1.5">
+					<Label htmlFor="region">Région :</Label>
+					<Select
+						value={region}
+						onValueChange={setRegion}
+					>
+						<SelectTrigger>
+							<SelectValue placeholder="Sélectionnez une région" />
+						</SelectTrigger>
+						<SelectContent>
+							{regions.map((region) => (
+								<SelectItem
+									key={region.id}
+									value={region.id.toString()}
+								>
+									{region.name}
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
+				</div>
+				<Calendar
+					mode="single"
+					selected={date}
+					onSelect={setDate}
+					className="rounded-md border mx-auto"
+				/>
+				<Button
+					type="submit"
+					className="font-bold"
+					disabled={!date || !name || !link || !region || !file}
+				>
+					Ajouter l&apos;événement
+				</Button>
+			</form>
+		</div>
 	);
 }
