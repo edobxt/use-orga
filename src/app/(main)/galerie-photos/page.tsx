@@ -11,7 +11,7 @@ export default async function GaleriePage() {
 				{galeries.map((galerie) => (
 					<GalerieItem
 						galerie={galerie}
-						key={galerie.id}
+						key={galerie.slug}
 					/>
 				))}
 			</div>
