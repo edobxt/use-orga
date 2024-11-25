@@ -6,29 +6,34 @@ import { Galerie } from "@/lib/types";
 import { CloudinaryPhoto } from "@/lib/types";
 import { getGalerieBySlug } from "@/actions/galerie-actions";
 import { getGaleriePhotos } from "@/actions/photo-actions";
-import { notFound, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
+import Link from "next/link";
+import { ArrowLeft, ImageOff, Loader } from "lucide-react";
 
 const GaleriePhotos = () => {
 	const lightboxRef = useRef<any>(null);
 	const [galerie, setGalerie] = useState<Galerie | null>(null);
 	const [photos, setPhotos] = useState<CloudinaryPhoto[]>([]);
+	const [isLoading, setIsLoading] = useState(false);
 	const { slug } = useParams();
 
 	useEffect(() => {
-		const fetchData = async () => {
-			if (!slug || typeof slug !== "string") return;
+        const fetchData = async () => {
+            if (!slug || typeof slug !== "string") return;
 
-			const [galerieData, photosData] = await Promise.all([getGalerieBySlug(slug), getGaleriePhotos(slug)]);
+            setIsLoading(true);
+            const [galerieData, photosData] = await Promise.all([getGalerieBySlug(slug), getGaleriePhotos(slug)]);
 
-			if (!galerieData) {
-				notFound();
-			} else {
-				setGalerie(galerieData);
-				setPhotos(photosData);
-			}
-		};
-		fetchData();
-	}, [slug]);
+            if (!galerieData) {
+				setIsLoading(false);
+            } else {
+                setGalerie(galerieData);
+                setPhotos(photosData);
+            }
+            setIsLoading(false);
+        };
+        fetchData();
+    }, [slug]);
 
 	const openLightbox = async (index: number) => {
 		const PhotoSwipe = (await import('photoswipe')).default;
@@ -58,7 +63,47 @@ const GaleriePhotos = () => {
 		640: 1
 	};
 
-	if (!galerie) return null;
+	if (isLoading) {
+        return (
+            <div className="container mx-auto flex justify-center items-center h-80">
+				<Loader className="w-16 h-16 animate-spin" />
+            </div>
+        );
+    }
+
+	// Vérifiez si la galerie n'a pas été trouvée
+    if (galerie === null) {
+        return (
+            <div className="container mx-auto">
+                <div className="flex flex-col justify-center items-center gap-4">
+					<ImageOff className="w-16 h-16" />
+					<p className="text-center">Il semblerait que cette galerie n&apos;existe pas.</p>
+					<Link href="/galerie-photos"  className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-md hover:bg-gray-100 transition-colors">
+						<ArrowLeft className="w-5 h-5" />
+						<span>Retour à la liste des galeries</span>
+					</Link>
+				</div>
+            </div>
+        );
+    }
+
+    // Vérifiez si la galerie est vide
+    if (photos.length === 0) {
+        return (
+            <div className="container mx-auto">
+                <h1 className="text-3xl font-bold mb-10">{galerie?.name}</h1>
+
+				<div className="flex flex-col justify-center items-center gap-4">
+					<ImageOff className="w-16 h-16" />
+					<p className="text-center">Aucune photo disponible dans cette galerie.</p>
+					<Link href="/galerie-photos"  className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-md hover:bg-gray-100 transition-colors">
+						<ArrowLeft className="w-5 h-5" />
+						<span>Retour à la liste des galeries</span>
+					</Link>
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<div className="container mx-auto">
