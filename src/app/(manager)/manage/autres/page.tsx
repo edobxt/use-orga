@@ -2,12 +2,12 @@ import { getRegions } from "@/actions/region-actions";
 import ManageRegionItem from "@/components/manage-region-item";
 import AddRegionButton from "@/components/add-region-button";
 import { RecommendEventButton } from "@/components/recommend-event-button";
-import { getRecommendedEvents } from "@/actions/event-actions";
+import { getRecommendations } from "@/actions/recommend-actions";
 import ManageRecommendedEvent from "@/components/manage-recommended-event";
 
 const ManageAutresPage = async () => {
 	const regions = await getRegions();
-	const recommendedEvents = await getRecommendedEvents();
+	const recommendations = await getRecommendations();
 
 	return (
 		<div className="flex flex-col gap-10 max-w-7xl mx-auto w-full px-4">
@@ -21,10 +21,10 @@ const ManageAutresPage = async () => {
 					<RecommendEventButton />
 				</div>
 				<div className="flex flex-col gap-2">
-					{recommendedEvents.map((event) => (
+					{recommendations.map((recommendation) => (
 						<ManageRecommendedEvent
-							key={event.id}
-							event={event}
+							key={recommendation.id}
+							recommendation={recommendation}
 						/>
 					))}
 				</div>

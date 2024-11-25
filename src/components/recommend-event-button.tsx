@@ -21,30 +21,16 @@ import {
 	DrawerTrigger,
 } from "@/components/ui/drawer";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { PlusCircle } from "lucide-react";
+import { Loader, PlusCircle } from "lucide-react";
 import { Event } from "@/lib/types";
-import { NonRecommendedEventsList } from "./nonrecommended-event-list";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Calendar } from "./ui/calendar";
+import { cn } from "@/lib/utils";
 
 export function RecommendEventButton() {
 	const [open, setOpen] = React.useState(false);
 	const isDesktop = useMediaQuery("(min-width: 768px)");
-	const [selectedEvents, setSelectedEvents] = React.useState<Event[] | null>(null);
-
-	const handleCreate = async () => {
-		if (selectedEvents) {
-            selectedEvents.forEach(async (event) => {
-                const formData = new FormData();
-                formData.append("recommended", "true");
-
-                fetch(`/api/event/${event.id}/recommended`, {
-                    method: "PUT",
-                    body: formData,
-                });
-            });
-		}
-		setSelectedEvents(null);
-		setOpen(false);
-	};
 
 	if (isDesktop) {
 		return (
@@ -61,22 +47,12 @@ export function RecommendEventButton() {
 				<DialogContent className="sm:max-w-[425px] text-black">
 					<DialogHeader>
 						<DialogTitle>Recommander des évènements</DialogTitle>
-						<DialogDescription>Sélectionnez l&apos;évènement à recommander</DialogDescription>
+						<DialogDescription>
+							Décrivez l&apos;évènement à recommander.
+						</DialogDescription>
 					</DialogHeader>
-					<NonRecommendedEventsList
-						setSelectedEvents={setSelectedEvents}
-						selectedEvents={selectedEvents}
-					/>
-					<div className="flex justify-end mt-4">
-						<Button
-							onClick={() => {
-								handleCreate();
-							}}
-							disabled={!selectedEvents}
-						>
-							Recommander
-						</Button>
-					</div>
+
+					<RecommendEventForm />
 				</DialogContent>
 			</Dialog>
 		);
@@ -95,26 +71,111 @@ export function RecommendEventButton() {
 			<DrawerContent>
 				<DrawerHeader className="text-left text-black">
 					<DrawerTitle>Recommander des évènements</DrawerTitle>
-					<DrawerDescription>Sélectionnez l&apos;évènement à recommander</DrawerDescription>
+					<DrawerDescription>
+						Décrivez l&apos;évènement à recommander.
+					</DrawerDescription>
 				</DrawerHeader>
-				<NonRecommendedEventsList
-					setSelectedEvents={setSelectedEvents}
-                    selectedEvents={selectedEvents}
-				/>
+
+				<RecommendEventForm />
+
 				<DrawerFooter className="pt-2">
-					<Button
-						onClick={() => {
-							handleCreate();
-						}}
-						disabled={!selectedEvents}
-					>
-						Recommander
-					</Button>
 					<DrawerClose asChild>
-						<Button variant="outline" className="text-black">Annuler</Button>
+						<Button
+							variant="outline"
+							className="text-black"
+						>
+							Annuler
+						</Button>
 					</DrawerClose>
 				</DrawerFooter>
 			</DrawerContent>
 		</Drawer>
+	);
+}
+
+function RecommendEventForm({ className }: React.ComponentProps<"form">) {
+	const [loading, setLoading] = React.useState(false);
+	const [name, setName] = React.useState("");
+	const [lieu, setLieu] = React.useState("");
+	const [link, setLink] = React.useState("");
+	const [date, setDate] = React.useState<Date | undefined>();
+
+	const handleSubmit = async (e: React.FormEvent) => {
+		e.preventDefault();
+		setLoading(true);
+
+		const formData = new FormData();
+		formData.append("name", name);
+		formData.append("lieu", lieu);
+		formData.append("booking_link", link);
+		formData.append("date", date?.toISOString().split("T")[0] || "");
+
+		try {
+			const response = await fetch("/api/recommend", {
+				method: "POST",
+				body: formData,
+			});
+			const result = await response.json();
+			if (response.ok) {
+				window.location.reload();
+			} else {
+				console.error("Erreur :", result.message);
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
+	return (
+		<div>
+			{loading && (
+				<div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50">
+					<Loader className="w-10 h-10 animate-spin" />
+				</div>
+			)}
+
+			<form
+				onSubmit={handleSubmit}
+				className={cn("grid items-start gap-4 text-black", className)}
+			>
+				<div className="grid w-full max-w-sm items-center gap-1.5">
+					<Label htmlFor="name">Nom de l&apos;événement :</Label>
+					<Input
+						id="name"
+						type="text"
+						onChange={(e) => setName(e.target.value)}
+					/>
+				</div>
+				<div className="grid w-full max-w-sm items-center gap-1.5">
+					<Label htmlFor="lieu">Lieu :</Label>
+					<Input
+						id="lieu"
+						type="text"
+						onChange={(e) => setLieu(e.target.value)}
+					/>
+				</div>
+				<div className="grid w-full max-w-sm items-center gap-1.5">
+					<Label htmlFor="booking_link">Lien de réservation :</Label>
+					<Input
+						id="name"
+						type="text"
+						onChange={(e) => setLink(e.target.value)}
+					/>
+				</div>
+				<Calendar
+					mode="single"
+					selected={date}
+					onSelect={setDate}
+					className="rounded-md border mx-auto"
+				/>
+				<Button
+					type="submit"
+					className="font-bold"
+					disabled={!date || !name || !lieu || !link}
+				>
+					Recommander
+				</Button>
+			</form>
+		</div>
 	);
 }

@@ -1,17 +1,13 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Event } from "@/lib/types";
+import { Recommendation } from "@/lib/types";
 import { X } from "lucide-react";
 
-const ManageRecommendedEvent = ({ event }: { event: Event }) => {
+const ManageRecommendedEvent = ({ recommendation }: { recommendation: Recommendation }) => {
 	const handleUnRecommend = async () => {
 		try {
-			const formData = new FormData();
-			formData.append("recommended", "false");
-
-			const response = await fetch(`/api/event/${event.id}/recommended`, {
-				method: "PUT",
-				body: formData,
+			const response = await fetch(`/api/recommend/${recommendation.id}`, {
+				method: "DELETE",
 			});
 			if (response.ok) {
 				window.location.reload();
@@ -26,11 +22,11 @@ const ManageRecommendedEvent = ({ event }: { event: Event }) => {
 	return (
 		<div className="flex flex-row justify-between items-center">
 			<div className="flex flex-col gap-2">
-				<p className="font-bold">{event.name}</p>
+				<p className="font-bold">{recommendation.name}</p>
 				<div className="flex flex-row gap-2">
-					<p>{event.date.toLocaleDateString("fr-FR", { dateStyle: "medium" })}</p>
+					<p>{recommendation.date.toLocaleDateString("fr-FR", { dateStyle: "medium" })}</p>
 					<p>•</p>
-					<p>{event.region_name}</p>
+					<p>{recommendation.location}</p>
 				</div>
 			</div>
 			<Button

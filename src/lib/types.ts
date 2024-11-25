@@ -56,3 +56,11 @@ export interface CloudinaryRessource {
 	filename: string;
 	public_id: string;
 }
+
+export interface Recommendation {
+	id: number;
+	name: string;
+	location: string;
+	booking_link: string;
+	date: Date;
+}

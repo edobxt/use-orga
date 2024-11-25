@@ -1,5 +1,6 @@
 import { getEventsSoon, getRecommendedEvents } from "@/actions/event-actions";
 import { getGaleries } from "@/actions/galerie-actions";
+import { getRecommendations } from "@/actions/recommend-actions";
 import { getRegions } from "@/actions/region-actions";
 import { BannerCarousel } from "@/components/banner-carousel";
 import Flyer from "@/components/flyer";
@@ -15,7 +16,7 @@ export default async function Home() {
 	const events = await getEventsSoon();
 	const regions = await getRegions();
 	const galeries = await getGaleries(4);
-	const recommendedEvents = await getRecommendedEvents();
+	const recommendations = await getRecommendations();
 
 	return (
 		<div className="flex flex-col gap-10 items-center">
@@ -61,7 +62,10 @@ export default async function Home() {
 							Voir plus
 						</Link>
 					</div>
-					<div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+					<div
+						className="grid grid-cols-2 md:grid-cols-3 gap-2"
+						key={`galeries-${galeries.length}`}
+					>
 						{galeries.map((galerie) => (
 							<GalerieItem
 								galerie={galerie}
@@ -73,13 +77,13 @@ export default async function Home() {
 
 				<div className="flex flex-col gap-4">
 					<h2 className="text-xl font-bold">Nos recommandations</h2>
-					{recommendedEvents.length > 0 ? (
+					{recommendations.length > 0 ? (
 						<div className="flex flex-col gap-2">
-							{recommendedEvents.map((event, index) => (
+							{recommendations.map((recommendation, index) => (
 								<RecommendedEvent
-									event={event}
+									recommendation={recommendation}
 									index={index}
-									key={event.id}
+									key={recommendation.id}
 								/>
 							))}
 						</div>

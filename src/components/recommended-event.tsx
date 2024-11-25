@@ -1,7 +1,7 @@
-import { Event } from "@/lib/types";
+import { Recommendation } from "@/lib/types";
 import Link from "next/link";
 
-const RecommendedEvent = ({ event, index }: { event: Event; index: number }) => {
+const RecommendedEvent = ({ recommendation, index }: { recommendation: Recommendation; index: number }) => {
 	const backgrounds = [
 		"linear-gradient(to right, #c4d8ff, #5567ff)", // Bleu pastel vers bleu foncé
 		"linear-gradient(to right, #c4ffde, #55ffa6)", // Vert pastel vers vert vif
@@ -15,16 +15,16 @@ const RecommendedEvent = ({ event, index }: { event: Event; index: number }) => 
 
 	return (
 		<Link
-			href={event.booking_link ?? ""}
+			href={recommendation.booking_link ?? ""}
 			target="_blank"
-			className="flex justify-between items-center p-6 rounded-lg"
+			className="grid grid-cols-1 md:grid-cols-2 gap-2 p-6 rounded-lg"
 			style={{ background: backgrounds[index % backgrounds.length] }}
 		>
-			<p className="text-black font-normal">{event.name}</p>
-			<div className="flex items-center gap-4">
-				<p>{event.date.toLocaleDateString().replaceAll("/", ".")}</p>
+			<p className="text-black font-normal">{recommendation.name}</p>
+			<div className="flex items-center justify-end gap-4">
+				<p>{recommendation.date.toLocaleDateString().replaceAll("/", ".")}</p>
 				<div className="h-3 w-px bg-white"></div> {/* Divider */}
-				<p>{event.region_name}</p>
+				<p>{recommendation.location}</p>
 			</div>
 		</Link>
 	);
