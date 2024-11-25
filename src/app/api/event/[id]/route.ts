@@ -2,7 +2,7 @@ import { deleteEvent, updateEvent } from "@/actions/event-actions";
 import { uploadCloudinaryResource } from "@/lib/cloudinary";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
 	if (!request.headers.get("content-type")?.includes("multipart/form-data")) {
 		return NextResponse.json(
 			{ message: "Le format de la requête est incorrect. Attendu : multipart/form-data" },
