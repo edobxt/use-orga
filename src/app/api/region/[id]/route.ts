@@ -1,7 +1,7 @@
 import { deleteRegion, updateRegion } from "@/actions/region-actions";
 import { NextResponse } from "next/server";
 
-export async function PUT(request: Request, { params }: { params: { id: number } }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: number }> }) {
 	const { id } = await params;
 	const formData = await request.formData();
 	const name = formData.get("name") as string;
@@ -14,7 +14,7 @@ export async function PUT(request: Request, { params }: { params: { id: number }
 	}
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: number } }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: number }> }) {
 	const { id } = await params;
 	try {
 		await deleteRegion(id);

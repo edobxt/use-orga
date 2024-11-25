@@ -1,7 +1,7 @@
 import { deleteRecommendation, updateRecommendation } from "@/actions/recommend-actions";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
 	const { id } = await params;
 
 	try {
@@ -15,7 +15,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
 	}
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
 	const { id } = await params;
 	const formData = await request.formData();
 
