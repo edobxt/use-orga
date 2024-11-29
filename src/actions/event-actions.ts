@@ -18,7 +18,7 @@ export async function getEvents() {
 export async function getEventsWithoutGaleries() {
 	try {
 		return await executeQuery<Event[]>({
-			query: "SELECT * FROM event WHERE id NOT IN (SELECT event_id FROM galerie) and date > NOW()",
+			query: "SELECT * FROM event WHERE id NOT IN (SELECT event_id FROM galerie) and date < NOW()",
 		});
 	} catch (error) {
 		console.error("Erreur lors de la récupération des événements sans galeries:", error);
