@@ -4,7 +4,7 @@ import Link from "next/link";
 const Footer = () => {
 	const navItems = [
 		{ label: "ACCUEIL", href: "/" },
-		{ label: "GALERIE", href: "/galerie" },
+		{ label: "GALERIE", href: "/galerie-photos" },
 		{ label: "CONTACT", href: "/contact" },
 	];
 
@@ -21,13 +21,15 @@ const Footer = () => {
 				))}
 			</div>
 
-			<Image
-				src="/logo.png"
-				alt="logo"
-				width={100}
-				height={100}
-				priority
-			/>
+			<Link href="/">
+				<Image
+					src="/logo.png"
+					alt="logo"
+					width={100}
+					height={100}
+					priority
+				/>
+			</Link>
 		</div>
 	);
 };
