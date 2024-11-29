@@ -2,6 +2,10 @@ import ManageEventItem from "@/components/manage-event-item";
 import { AddEventButton } from "@/components/add-event-button";
 import { getEvents } from "@/actions/event-actions";
 
+export const metadata = {
+	title: `Événements - Gestion | ${process.env.ORGA_NAME}`,
+};
+
 const ManageEvenements = async () => {
 	const events = await getEvents();
 	

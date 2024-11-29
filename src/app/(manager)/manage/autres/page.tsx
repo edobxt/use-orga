@@ -5,6 +5,10 @@ import { RecommendEventButton } from "@/components/recommend-event-button";
 import { getRecommendations } from "@/actions/recommend-actions";
 import ManageRecommendedEvent from "@/components/manage-recommended-event";
 
+export const metadata = {
+	title: `Autres paramètres - Gestion | ${process.env.ORGA_NAME}`,
+};
+
 const ManageAutresPage = async () => {
 	const regions = await getRegions();
 	const recommendations = await getRecommendations();

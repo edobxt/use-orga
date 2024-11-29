@@ -37,7 +37,7 @@ const ManageLoginPage = () => {
 	return (
 		<form onSubmit={onSubmit} className="flex flex-col items-center justify-center gap-5">
 			<h1 className="text-xl font-bold">Se connecter</h1>
-			<Image src="/GS.png" alt="logo" width={70} height={70} />
+			<Image src="/logo.png" alt="logo" width={70} height={70} />
 
 			<div className="grid w-full max-w-sm items-center gap-1.5">
 				<Label htmlFor="email">Email :</Label>

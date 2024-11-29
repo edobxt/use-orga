@@ -3,6 +3,10 @@ import Link from "next/link";
 import { getGaleries } from "@/actions/galerie-actions";
 import { Galerie } from "@/lib/types";
 
+export const metadata = {
+	title: `Galeries - Gestion | ${process.env.ORGA_NAME}`,
+};
+
 const ManageGaleries = async () => {
 	const galeries: Galerie[] = await getGaleries();
 

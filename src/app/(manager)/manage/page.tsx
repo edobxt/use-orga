@@ -5,6 +5,10 @@ import { BannerCarousel } from "@/components/banner-carousel";
 import Flyer from "@/components/flyer";
 import Link from "next/link";
 
+export const metadata = {
+	title: `Accueil - Gestion | ${process.env.ORGA_NAME}`,
+};
+
 const ManagePage = async () => {
 	const events = await getEventsSoon();
 	const regions = await getRegions();

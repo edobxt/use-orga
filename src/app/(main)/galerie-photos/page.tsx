@@ -1,6 +1,10 @@
 import { getGaleries } from "@/actions/galerie-actions";
 import GalerieItem from "@/components/galerie-item";
 
+export const metadata = {
+	title: `Galerie Photos - ${process.env.ORGA_NAME}`,
+};
+
 export default async function GaleriePage() {
 	const galeries = await getGaleries();
 
