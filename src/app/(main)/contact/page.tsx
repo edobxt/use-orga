@@ -3,15 +3,18 @@ import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Loader } from "lucide-react";
 
 const ContactPage = () => {
 	const [submitted, setSubmitted] = useState(false);
+	const [loading, setLoading] = useState(false);
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		const formData = new FormData(e.currentTarget as HTMLFormElement);
 
 		try {
+			setLoading(true);
 			const response = await fetch("/api/contact", {
 				method: "POST",
 				body: formData,
@@ -24,13 +27,23 @@ const ContactPage = () => {
 			}
 		} catch (error) {
 			console.error("Erreur lors de l'envoi du formulaire:", error);
+		} finally {
+			setLoading(false);
 		}
 	};
+
+	if (loading) {
+		return (
+			<div className="flex justify-center items-start h-screen">
+				<Loader className="w-10 h-10 animate-spin" />
+			</div>
+		);
+	}
 
 	return (
 		<div className="flex flex-col gap-10 max-w-xl mx-auto w-full px-4">
 			{submitted ? (
-				<div className="transition-opacity duration-500 opacity-0">
+				<div>
 					<h2 className="text-xl font-bold">Merci pour votre message !</h2>
 					<p>Nous vous répondrons dans les plus brefs délais.</p>
 				</div>

@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
 
 	const mailOptions = {
 		from: process.env.MAIL_USER,
-		to: "gs.events@gmail.com",
+		to: process.env.MAIL_USER,
 		subject: `GSevents - ${subject}`,
 		html: `<p>Nom: ${name}</p><p>Email: ${email}</p><p>Sujet: ${subject}</p><p>Message: ${message}</p>`,
 	};
